@@ -67,14 +67,19 @@ public class Television implements Comparable<Television> {
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{" +
-                "brand='" + brand + '\'' +
-                ", volume=" + volume +
+                "brand='" + getBrand() + '\'' +
+                ", volume=" + getVolume() +
                 ", channel=" + getCurrentChannel() +
                 '}';
     }
 
     @Override
     public int compareTo(Television other) {
-        return this.getBrand().compareTo(other.getBrand());
+        int result = this.getBrand().compareTo(other.getBrand());
+
+        if (result == 0) {
+            result = Integer.compare(this.getVolume(), other.getVolume());
+        }
+        return result;
     }
 }

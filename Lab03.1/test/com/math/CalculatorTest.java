@@ -9,13 +9,48 @@
 package com.math;
 
 import static org.junit.Assert.*;
-import org.junit.Test;
+
+import org.junit.*;
 
 public class CalculatorTest {
 
+    // fixture
+    private Calculator calc;
+
+    @BeforeClass
+    public static void beforeClass() {
+        System.out.println("Before Class");
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        System.out.println("After Class");
+    }
+
+    @Before
+    public void setUp() {
+        System.out.println("setUp");
+        calc = new Calculator();
+    }
+
+    @After
+    public void cleanUp() throws Exception {
+        System.out.println("cleanUp");
+    }
+
     @Test
     public void testAdd() {
-        Calculator calc = new Calculator();
         assertEquals(5, calc.add(1, 4));  // expected, actual
+    }
+
+    @Test
+    public void testDivide() {
+        assertEquals(2.5, calc.divide(5, 2), 0.001);
+    }
+
+    @Test
+    public void testIsEven() {
+        assertTrue(calc.isEven(10));
+        assertFalse(calc.isEven(11));
     }
 }
