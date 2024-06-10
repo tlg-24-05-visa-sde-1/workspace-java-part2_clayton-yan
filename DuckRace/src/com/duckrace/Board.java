@@ -38,7 +38,7 @@ import java.util.*;
  *   17       17    Dom        1    DEBIT_CARD
  */
 
-class Board {
+public class Board {
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
 
@@ -66,13 +66,20 @@ class Board {
      * this shows data to human user
      */
     public void show() {
-        Collection<DuckRacer> racers = racerMap.values();
 
-        System.out.println("id    name    wins    rewards");
-        System.out.println("---    ---     ----   ---------");
-        for (DuckRacer duckRacer: racers) {
-            System.out.printf("%s    %s    %s    %s\n", duckRacer.getId(), duckRacer.getName(), duckRacer.getWins(), duckRacer.getRewards());
+        if (racerMap.isEmpty()) {
+            System.out.println("There are currently no results to show");
+        } else {
+            Collection<DuckRacer> racers = racerMap.values();
+
+            System.out.println("id    name    wins    rewards");
+            System.out.println("---    ---     ----   ---------");
+            for (DuckRacer duckRacer: racers) {
+                System.out.printf("%s    %s    %s    %s\n",
+                        duckRacer.getId(), duckRacer.getName(), duckRacer.getWins(), duckRacer.getRewards());
+            }
         }
+
 
     }
 
