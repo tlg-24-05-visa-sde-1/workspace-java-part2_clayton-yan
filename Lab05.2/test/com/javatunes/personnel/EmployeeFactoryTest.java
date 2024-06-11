@@ -1,6 +1,8 @@
 package com.javatunes.personnel;
 
 import static org.junit.Assert.*;
+
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Before;
@@ -51,24 +53,49 @@ public class EmployeeFactoryTest {
      * assertEquals(SalariedEmployee.class, emp.getClass())
      */
     @Test
-    public void testCreateEmployeeSalaried() {
+    public void CreateEmployee_ReturnsSalariedEmployeeWithPropertiesSet_SEType() {
         // TODO
+        Employee employee = EmployeeFactory.createEmployee(seMap);
+
+        // class object
+        assertEquals(SalariedEmployee.class, employee.getClass());
+        // prop
+        verifyCommonProperties(employee);
+        // downcast emp to salaried
+        SalariedEmployee semp = (SalariedEmployee) employee;
+        assertEquals(50_000.0, semp.getSalary(), 0.001);
+    }
+
+    private static void verifyCommonProperties(Employee employee) {
+        assertEquals("Jackie", employee.getName());
+        assertEquals(Date.valueOf("1990-08-24"), employee.getHireDate());
     }
 
     /**
      * TASK: verify that passing heMap into your factory returns a HourlyEmployee, with all properties set.
      */
     @Test
-    public void testCreateEmployeeHourly() {
+    public void CreateEmployee_ReturnsHourlyEmployeeWithPropertiesSet_HEType() {
         // TODO
+        Employee employee = EmployeeFactory.createEmployee(heMap);
+
+        assertEquals(HourlyEmployee.class, employee.getClass());
+        verifyCommonProperties(employee);
+
+        HourlyEmployee he = (HourlyEmployee) employee;
+        assertEquals(50.0, he.getRate(), 0.001);
+        assertEquals(40.0, he.getHours(), 0.001);
+
     }
 
     /**
      * TASK: verify that passing a map with an invalid "type" value results in IllegalArgumentException.
      * The only valid values for "type" are "HE" or "SE".
      */
-    @Test
-    public void testCreateEmployeeInvalidTypeThrowsIllegalArgumentException() {
-        // TODO
+    @Test(expected = IllegalArgumentException.class)
+    public void CreateEmployee_ThrowsIllegalArgumentException_InvalidType() {
+        seMap.put("type", "INVALID-TYPE");
+        EmployeeFactory.createEmployee(seMap);
+
     }
 }
