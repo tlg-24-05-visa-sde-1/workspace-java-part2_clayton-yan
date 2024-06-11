@@ -8,13 +8,31 @@
  */
 package com.javatunes.product;
 
+import com.javatunes.billing.Location;
+import com.javatunes.billing.TaxCalculator;
+import com.javatunes.billing.TaxCalculatorFactory;
+
 import java.util.Collection;
+import java.util.Locale;
 
 public class Order {
     private String id;
+    private double cost;
+    private final Location location;
 
-    public Order(String id) {
+    public Order(String id, Location location) {
+
         this.id = id;
+        this.location = location;
+    }
+
+    /*
+     * We have three options to delegate to a TaxCalculator strategy:
+     */
+    public double getTax() {
+
+        TaxCalculator calc = TaxCalculatorFactory.getTaxCalculator(getLocation());
+        return calc.taxAmount(getCost());
     }
 
     /**
@@ -29,10 +47,20 @@ public class Order {
         for (Product product : cartItems) {
             System.out.println(product.getCode());
         }
-        System.out.println("Order Total: " + cart.total());
+        double cartTotal = cart.total();
+        System.out.println("Order Total: " + cartTotal);
+        this.cost = cartTotal;
     }
 
     public String getId() {
         return id;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public Location getLocation() {
+        return location;
     }
 }
