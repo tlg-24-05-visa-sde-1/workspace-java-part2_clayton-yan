@@ -14,8 +14,24 @@ public class EmployeeTest {
 
     @Before
     public void setUp() {
-        emp1 = new SalariedEmployee("John", Date.valueOf("2000-01-01"));
-        emp2 = new SalariedEmployee("John", Date.valueOf("2000-01-01"));
+        // emp1 = new DummyEmployee("John", Date.valueOf("2000-01-01"));
+        // emp2 = new DummyEmployee("John", Date.valueOf("2000-01-01"));
+        // create instances of an anonymous class instead
+        emp1 = getEmployee();
+        emp2 = getEmployee();
+    }
+    private static Employee getEmployee() {
+        return new Employee("John", Date.valueOf("2000-01-01")) {
+            @Override
+            public double pay() {
+                return 0;
+            }
+
+            @Override
+            public double payTaxes() {
+                return 0;
+            }
+        };
     }
 
     @Test
@@ -35,4 +51,25 @@ public class EmployeeTest {
         emp2.setHireDate(Date.valueOf("2020-02-02"));
         assertFalse(emp1.equals(emp2));
     }
+
+    // named member-level inner class
+    private class DummyEmployee extends Employee {
+        public DummyEmployee() {
+        }
+
+        public DummyEmployee(String name, Date hireDate) {
+            super(name, hireDate);
+        }
+
+        @Override
+        public double pay() {
+            return 0;
+        }
+
+        @Override
+        public double payTaxes() {
+            return 0;
+        }
+    }
+
 }
