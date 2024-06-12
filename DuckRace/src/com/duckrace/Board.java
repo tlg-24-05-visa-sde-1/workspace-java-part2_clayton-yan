@@ -1,6 +1,6 @@
 package com.duckrace;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -38,10 +38,37 @@ import java.util.*;
  *   17       17    Dom        1    DEBIT_CARD
  */
 
-public class Board {
+public class Board implements Serializable {
+    private static final String DATA_FILE_PATH = "data/board.dat";
+    private static final String STUDENT_ID_FILE_PATH = "conf/student-ids.csv";
+
+    /*
+     * read from binary file data/board.dat or create a new Board
+     */
+    public static Board getInstance() {
+        Board board = null;
+        if (Files.exists(Path.of(DATA_FILE_PATH))) {
+            // read it back
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(DATA_FILE_PATH))) {
+                board = (Board) in.readObject();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            // first time bc file doesn't exist
+            board = new Board();
+        }
+
+        return board;
+    }
+
     private final Map<Integer,String> studentIdMap = loadStudentIdMap();
     private final Map<Integer,DuckRacer> racerMap  = new TreeMap<>();
 
+    // prevent instantiation from outside
+    private Board() {
+    }
     /*
      * Update the board (racerMap) by making a DuckRacer win
      * fetching an existing DuckRacer from racerMap
@@ -60,6 +87,22 @@ public class Board {
 
         }
         racer.win(reward);
+        save();
+    }
+
+    /*
+     * Writes this Board object to binary file data/board.dat
+     * we are using java built in Object Serialization facility
+     * to write the state of this object to the file
+     */
+    private void save() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(DATA_FILE_PATH))) {
+
+            out.writeObject(this); // write "me" (I am a Board object) to the file (as dust)
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
     }
 
     /*
@@ -91,7 +134,7 @@ public class Board {
         Map<Integer,String> studentIdMap = new HashMap<Integer,String>();
 
         try {
-            List<String> lines = Files.readAllLines(Path.of("conf/student-ids.csv"));
+            List<String> lines = Files.readAllLines(Path.of(STUDENT_ID_FILE_PATH));
 
             for (String line: lines) {
                 String[] tokens = line.split(",");

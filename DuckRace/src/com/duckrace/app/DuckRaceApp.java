@@ -9,7 +9,8 @@ import static com.duckrace.Reward.*;
 public class DuckRaceApp {
     // Controller, directs flow of app, prompts user for inputs then passes those into system
 
-    private final Board board = new Board();
+    // get instance for board, new if none or get the created one
+    private final Board board = Board.getInstance();
     private final Scanner scanner = new Scanner(System.in);
 
     public void execute() {
